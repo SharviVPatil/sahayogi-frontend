@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sahayogi – AI Financial Coach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #e4f1ff 0%, #f8f4ff 40%, #fef5e9 100%);
+      --primary: #ff7a32;
+      --primary-soft: #ffe5d3;
+      --primary-dark: #ff5b1c;
+      --accent-blue: #194b8f;
+      --accent-blue-soft: #0f3c7a;
+      --card-bg: #ffffff;
+      --text-main: #141b2c;
+      --text-muted: #6b7280;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.12);
+      --radius-card: 24px;
+      --radius-pill: 999px;
+      --step-size: 46px;
+      --transition-fast: 180ms ease-out;
+      --transition-med: 260ms cubic-bezier(0.16, 0.68, 0.4, 1);
+      --footer-bg: radial-gradient(circle at top left, #2558a8 0, #082c5a 55%, #041833 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b1020;
+      color: var(--text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .page {
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* NAVBAR ----------------------------------------------------- */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0 10px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 20% 0, #ffcc7a 0, #ff7a32 40%, #df3b75 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .nav-brand {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 0.02em;
+      color: #0f172a;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    .nav-links a {
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -4px;
+      height: 2px;
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform var(--transition-fast);
+      background: linear-gradient(90deg, #ff7a32, #df3b75);
+      border-radius: 999px;
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), color var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ff7a32, #ff5b1c);
+      color: #fff;
+      box-shadow: 0 18px 40px rgba(249, 115, 22, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 48px rgba(249, 115, 22, 0.5);
+    }
+
+    .btn-ghost {
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(255, 255, 255, 0.7);
+      color: #111827;
+      gap: 8px;
+    }
+
+    .btn-ghost span.icon {
+      display: inline-flex;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(148, 163, 184, 0.9);
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .btn-ghost:hover {
+      background: #fff;
+    }
+
+    /* HERO ----------------------------------------------------- */
+    .hero {
+      padding: 36px 0 72px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.35fr);
+      gap: 40px;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(209, 213, 219, 0.8);
+      font-size: 12px;
+      color: #4b5563;
+      margin-bottom: 18px;
+    }
+
+    .pill-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 0, #a7f3d0 0, #10b981 45%, #0f766e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+    }
+
+    .hero-title {
+      font-size: clamp(40px, 4vw + 12px, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      color: #020617;
+      margin-bottom: 16px;
+    }
+
+    .hero-title span.orange {
+      color: var(--primary);
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin-bottom: 24px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .hero-note {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .hero-note span {
+      color: #4b5563;
+      font-weight: 500;
+    }
+
+    /* HERO RIGHT MOCKUP --------------------------------------- */
+    .hero-art {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .hero-card {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 32px;
+      padding: 20px;
+      background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.45) 0, transparent 45%),
+        radial-gradient(circle at 100% 0, rgba(255, 255, 255, 0.25) 0, transparent 50%),
+        linear-gradient(145deg, #0f3e6d, #071b35 48%, #041427 100%);
+      color: #fff;
+      box-shadow: 0 32px 90px rgba(15, 23, 42, 0.8);
+      overflow: hidden;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .hero-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .hero-card-tag {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.25);
+      border: 1px solid rgba(45, 212, 191, 0.7);
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-card-body {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .hero-metric {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .hero-metric-value {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .hero-metric-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.12);
+      color: #bbf7d0;
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    .hero-graph {
+      position: relative;
+      height: 170px;
+      border-radius: 18px;
+      background: radial-gradient(circle at 0 0, #1e40af 0, #020617 60%);
+      overflow: hidden;
+      padding: 10px;
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .hero-graph-bar {
+      flex: 1;
+      border-radius: 999px;
+      background: linear-gradient(to top, rgba(248, 250, 252, 0.1), rgba(248, 250, 252, 0.8));
+      opacity: 0.2;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-graph-bar span {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #22c55e, #15803d);
+    }
+
+    .hero-graph-bar:nth-child(2) span {
+      background: linear-gradient(180deg, #38bdf8, #0ea5e9);
+    }
+
+    .hero-graph-bar:nth-child(4) span {
+      background: linear-gradient(180deg, #f97316, #ea580c);
+    }
+
+    .hero-float-card {
+      position: absolute;
+      right: -12px;
+      bottom: -18px;
+      width: 180px;
+      border-radius: 20px;
+      background: #f9fafb;
+      color: #0f172a;
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 0.35);
+      padding: 12px 13px;
+      font-size: 12px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .hero-float-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-float-pill {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    /* SECTION: STEPS ------------------------------------------- */
+    .section-steps {
+      padding: 0 0 70px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .section-kicker {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9ca3af;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 30px;
+      letter-spacing: -0.03em;
+      color: #020617;
+      margin-bottom: 6px;
+    }
+
+    .section-title span.orange {
+      color: var(--primary);
+    }
+
+    .section-subtitle {
+      font-size: 15px;
+      color: #9ca3af;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .step-card {
+      position: relative;
+      padding: 26px 22px 26px;
+      border-radius: var(--radius-card);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 18px 50px rgba(148, 163, 184, 0.35);
+      overflow: hidden;
+      transition: transform var(--transition-med), box-shadow var(--transition-med),
+        background var(--transition-med);
+    }
+
+    .step-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.7), transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition-med);
+      pointer-events: none;
+    }
+
+    .step-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 70px rgba(148, 163, 184, 0.5);
+      background: #ffffff;
+    }
+
+    .step-card:hover::before {
+      opacity: 1;
+    }
+
+    .step-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 20px;
+      background: #194b8f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e5efff;
+      margin-bottom: 18px;
+      font-size: 22px;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #020617;
+    }
+
+    .step-text {
+      font-size: 14px;
+      color: #6b7280;
+      max-width: 260px;
+    }
+
+    .step-number {
+      position: absolute;
+      top: -18px;
+      left: 22px;
+      width: var(--step-size);
+      height: var(--step-size);
+      border-radius: 999px;
+      background: linear-gradient(135deg, #22c55e, #0ea5e9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f9fafb;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(56, 189, 248, 0.45);
+    }
+
+    .step-number span {
+      background: rgba(15, 23, 42, 0.15);
+      padding: 4px 9px;
+      border-radius: 999px;
+    }
+
+    /* SECTION: FEATURES ----------------------------------------- */
+    .section-features {
+      padding: 0 0 80px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .feature-card {
+      padding: 24px 20px 26px;
+      border-radius: var(--radius-card);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--transition-med), box-shadow var(--transition-med),
+        background var(--transition-med);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      background: #ffffff;
+      box-shadow: 0 26px 75px rgba(148, 163, 184, 0.6);
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 20px;
+      background: #194b8f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e5efff;
+      margin-bottom: 18px;
+      font-size: 22px;
+    }
+
+    .feature-icon.orange {
+      background: #f97316;
+    }
+
+    .feature-icon.teal {
+      background: #059669;
+    }
+
+    .feature-icon.bluegreen {
+      background: linear-gradient(135deg, #22c55e, #0ea5e9);
+    }
+
+    .feature-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #020617;
+    }
+
+    .feature-text {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    /* FOOTER ---------------------------------------------------- */
+    .footer {
+      margin-top: auto;
+      background: var(--footer-bg);
+      color: #e5e7eb;
+      padding: 38px 0 18px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.6fr 1.1fr 1.1fr 1.6fr;
+      gap: 40px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .footer-brand-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .footer-text {
+      font-size: 14px;
+      color: #cbd5f5;
+      max-width: 260px;
+    }
+
+    .footer-heading {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #9caefc;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: grid;
+      gap: 6px;
+      font-size: 14px;
+    }
+
+    .footer-links a {
+      color: #d1d5db;
+      transition: color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+      transform: translateX(2px);
+    }
+
+    .footer-form-label {
+      font-size: 14px;
+      color: #d1d5db;
+      margin-bottom: 8px;
+    }
+
+    .footer-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .footer-input {
+      flex: 1;
+      padding: 9px 11px;
+      border-radius: 999px;
+      border: 0;
+      font-size: 13px;
+      outline: none;
+      background: rgba(15, 23, 42, 0.4);
+      color: #e5e7eb;
+    }
+
+    .footer-input::placeholder {
+      color: #9ca3af;
+    }
+
+    .footer-btn {
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 0;
+      font-size: 13px;
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      color: #111827;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .footer-bottom {
+      padding-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #9ca3af;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 14px;
+    }
+
+    .footer-bottom-links a {
+      color: #cbd5f5;
+    }
+
+    .footer-bottom-links a:hover {
+      color: #ffffff;
+    }
+
+    /* RESPONSIVE ------------------------------------------------ */
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: minmax(0, 1.2fr);
+      }
+
+      .hero-art {
+        order: -1;
+        justify-content: center;
+      }
+
+      .hero-card {
+        max-width: 420px;
+      }
+
+      .footer-top {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 26px;
+      }
+
+      .steps-grid,
+      .features-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero-title {
+        font-size: 34px;
+      }
+
+      .footer-top {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* DEMO MODAL ----------------------------------------------- */
+    .demo-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .demo-modal.is-open {
+      display: flex;
+    }
+
+    .demo-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+    }
+
+    .demo-modal-content {
+      position: relative;
+      z-index: 41;
+      width: 100%;
+      max-width: 720px;
+      margin: 0 20px;
+      background: #0b1020;
+      border-radius: 24px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .demo-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: radial-gradient(circle at top left, #1d4ed8, #020617);
+      color: #e5e7eb;
+    }
+
+    .demo-modal-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .demo-modal-close {
+      border: 0;
+      background: rgba(15, 23, 42, 0.45);
+      color: #e5e7eb;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .demo-modal-body {
+      padding: 16px 16px 18px;
+      background: radial-gradient(circle at top, #020617, #020617);
+    }
+
+    .demo-video {
+      width: 100%;
+      max-height: 420px;
+      background: #020617;
+      border-radius: 16px;
+      border: 1px solid rgba(55, 65, 81, 0.8);
+    }
+
+    .demo-video-helper {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="container">
+      <nav class="nav">
+        <div class="nav-left">
+          <div class="nav-logo-circle">S</div>
+          <div class="nav-brand">Sahayogi</div>
+        </div>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#steps">How It Works</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="nav-cta">
+          <button class="btn btn-ghost" data-open-demo="true">
+            <span class="icon">▶</span>
+            <span>Watch Demo</span>
+          </button>
+          <a
+            class="btn btn-primary"
+            href="https://github.com/GotheArpita/Mumbai-Hacks"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Get Started
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- HERO ---------------------------------------------------- -->
+    <main class="container" id="hero">
+      <section class="hero">
+        <div>
+          <div class="pill">
+            <div class="pill-dot">◎</div>
+            <span>For Freelancers &amp; Gig Workers</span>
+          </div>
+
+          <h1 class="hero-title">
+            Master Your Money,
+            <span class="orange">No Matter When</span>
+            It Comes
+          </h1>
+
+          <p class="hero-subtitle">
+            The AI-powered financial companion for freelancers and gig workers.
+            Predict, plan, and prosper with irregular income.
+          </p>
+
+          <div class="hero-actions">
+            <a
+              class="btn btn-primary"
+              href="https://github.com/GotheArpita/Mumbai-Hacks"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Get Started on GitHub →
+            </a>
+            <button class="btn btn-ghost" data-open-demo="true">
+              <span class="icon">▶</span>
+              <span>Watch Demo</span>
+            </button>
+          </div>
+
+          <p class="hero-note">
+            <span>No credit card required.</span> Set up in under 5 minutes.
+          </p>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-card">
+            <div class="hero-card-header">
+              <div>
+                <div class="hero-card-title">Cashflow Snapshot</div>
+                <div style="font-size:11px; opacity:0.6;margin-top:4px;">
+                  This month across gigs, retainers &amp; side-hustles
+                </div>
+              </div>
+              <div class="hero-card-tag">
+                <span
+                  style="
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 999px;
+                    border: 1px solid rgba(45,212,191,0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                  >★</span
+                >
+                AI Coach On
+              </div>
+            </div>
+
+            <div class="hero-card-body">
+              <div>
+                <div class="hero-metric">Projected Month-End Balance</div>
+                <div class="hero-metric-value">₹ 1,24,500</div>
+                <div class="hero-metric-pill">
+                  <span>▲ 42%</span>
+                  <span style="opacity:0.8;">vs last month</span>
+                </div>
+              </div>
+              <div class="hero-graph">
+                <div class="hero-graph-bar">
+                  <span style="height: 42%;"></span>
+                </div>
+                <div class="hero-graph-bar">
+                  <span style="height: 72%;"></span>
+                </div>
+                <div class="hero-graph-bar">
+                  <span style="height: 55%;"></span>
+                </div>
+                <div class="hero-graph-bar">
+                  <span style="height: 88%;"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-float-card">
+              <div class="hero-float-row">
+                <div style="font-weight:600;">Dry spell alert</div>
+                <div class="hero-float-pill">Next 10 days</div>
+              </div>
+              <div style="color:#4b5563;">
+                Book 3 gigs or pause non‑essentials to stay on track.
+              </div>
+              <div class="hero-float-row" style="margin-top:6px; font-size:11px; color:#6b7280;">
+                <span>Smart plan ready</span>
+                <span style="color:#16a34a; font-weight:600;">View suggestions →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEPS ------------------------------------------------- -->
+      <section class="section-steps" id="steps">
+        <div class="section-header">
+          <div class="section-kicker">Onboarding</div>
+          <h2 class="section-title">
+            Get Started in <span class="orange">3 Simple Steps</span>
+          </h2>
+          <p class="section-subtitle">
+            From setup to savings in under 5 minutes.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          <article class="step-card">
+            <div class="step-number"><span>01</span></div>
+            <div class="step-icon">🔗</div>
+            <h3 class="step-title">Connect Your Accounts</h3>
+            <p class="step-text">
+              Securely link your bank accounts, payment apps, and gig platforms
+              in seconds.
+            </p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number"><span>02</span></div>
+            <div class="
+
+          <article class="step-card">
+            <div class="step-number"><span>02</span></div>
+            <div class="step-icon">⚙️</div>
+            <h3 class="step-title">Set Your Baseline Needs</h3>
+            <p class="step-text">
+              Tell Sahayogi your essential monthly expenses and financial goals.
+            </p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number"><span>03</span></div>
+            <div class="step-icon">✨</div>
+            <h3 class="step-title">Let AI Guide You</h3>
+            <p class="step-text">
+              Get daily insights and personalized nudges to optimize your spending and savings.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- FEATURES --------------------------------------------- -->
+      <section class="section-features" id="features">
+        <div class="section-header">
+          <div class="section-kicker">Why Sahayogi</div>
+          <h2 class="section-title">
+            Built for <span class="orange">Irregular Income</span>
+          </h2>
+          <p class="section-subtitle">
+            Powerful features designed specifically for freelancers, gig workers, and anyone with unpredictable income streams.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon">
+              ⏱
+            </div>
+            <h3 class="feature-title">Smart Tracking</h3>
+            <p class="feature-text">
+              Flexible categories that adapt to your gigs. Track every rupee from every source.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon orange">
+              🤖
+            </div>
+            <h3 class="feature-title">AI Financial Coach</h3>
+            <p class="feature-text">
+              Daily proactive nudges – “Hey, you spent less today! Save the rest for next week’s lull?”
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon teal">
+              🎯
+            </div>
+            <h3 class="feature-title">Goal Setting</h3>
+            <p class="feature-text">
+              Visual savings goals for that new laptop or emergency fund.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon bluegreen">
+              🌊
+            </div>
+            <h3 class="feature-title">Income Smoothing</h3>
+            <p class="feature-text">
+              Analyze your income rhythm and predict dry spells before they happen.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -------------------------------------------------- -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-top">
+          <div>
+            <div class="footer-brand-name">Sahayogi</div>
+            <p class="footer-text">
+              Your friendly AI financial coach for irregular incomes.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="footer-heading">Product</h4>
+            <ul class="footer-links">
+              <li><a href="#features">Features</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#steps">How It Works</a></li>
+              <li><a href="#faq">FAQ</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-heading">Company</h4>
+            <ul class="footer-links">
+              <li><a href="#about">About Us</a></li>
+              <li><a href="#blog">Blog</a></li>
+              <li><a href="#careers">Careers</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-heading">Join the movement</h4>
+            <p class="footer-form-label">
+              Get financial tips tailored for freelancers.
+            </p>
+            <form class="footer-input-row" id="newsletter-form">
+              <input
+                type="email"
+                class="footer-input"
+                placeholder="Your email"
+                required
+              />
+              <button type="submit" class="footer-btn">Subscribe</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>© 2024 Sahayogi. All rights reserved.</div>
+          <div class="footer-bottom-links">
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#terms">Terms of Use</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- DEMO MODAL -------------------------------------------------- -->
+  <div class="demo-modal" id="demo-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="demo-modal-backdrop"></div>
+    <div class="demo-modal-content">
+      <div class="demo-modal-header">
+        <div class="demo-modal-title">Sahayogi – Product Walkthrough</div>
+        <button class="demo-modal-close" type="button" aria-label="Close demo">&times;</button>
+      </div>
+      <div class="demo-modal-body">
+        <video
+          id="demo-video"
+          class="demo-video"
+          controls
+          preload="metadata"
+        >
+          <!-- TODO: Replace walkthrough.mp4 with your actual video file path once uploaded -->
+          <source src="walkthrough.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <p class="demo-video-helper">
+          Replace <code>walkthrough.mp4</code> in the project folder with your actual demo video file when it's ready.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -------------------------------------------------------- -->
+  <script>
+    // Smooth scroll for buttons/links with data-scroll attribute
+    document.querySelectorAll("[data-scroll]").forEach(function (el) {
+      el.addEventListener("click", function (e) {
+        e.preventDefault();
+        var target = document.querySelector(el.getAttribute("data-scroll"));
+        if (!target) return;
+        window.scrollTo({
+          top: target.getBoundingClientRect().top + window.pageYOffset - 72,
+          behavior: "smooth",
+        });
+      });
+    });
+
+    // Demo modal open/close logic
+    (function () {
+      var modal = document.getElementById("demo-modal");
+      var video = document.getElementById("demo-video");
+      var closeBtn = modal.querySelector(".demo-modal-close");
+      var backdrop = modal.querySelector(".demo-modal-backdrop");
+
+      function openModal() {
+        if (!modal) return;
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        if (video && video.paused) {
+          video.play().catch(function () {
+            // Autoplay might be blocked; ignore.
+          });
+        }
+      }
+
+      function closeModal() {
+        if (!modal) return;
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+        }
+      }
+
+      document.querySelectorAll("[data-open-demo]").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          openModal();
+        });
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function () {
+          closeModal();
+        });
+      }
+
+      if (backdrop) {
+        backdrop.addEventListener("click", function () {
+          closeModal();
+        });
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal.classList.contains("is-open")) {
+          closeModal();
+        }
+      });
+    })();
+
+    // Fake newsletter submit for demo
+    document.getElementById("newsletter-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Thanks for subscribing! 🎉");
+      this.reset();
+    });
+  </script>
+</body>
+</html>
